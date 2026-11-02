@@ -1,7 +1,7 @@
 name: Build Reel Upscaler APK
 
-# Jab bhi main branch par code push ho, ya haath se chalaya jaye,
-# tab ye workflow debug APK banata hai.
+# Repo ke root me Reel-Upscaler-Native-App-Code.zip hona chahiye.
+# Workflow pehle ZIP extract karta hai, phir uske andar se APK banata hai.
 on:
   push:
     branches: [ main ]
@@ -25,12 +25,16 @@ jobs:
         with:
           gradle-version: "8.7"
 
+      - name: ZIP extract karo
+        run: unzip -o Reel-Upscaler-Native-App-Code.zip
+
       - name: Debug APK banao
+        working-directory: reel-upscaler-native
         run: gradle assembleDebug --stacktrace
 
       - name: APK artifact upload karo
         uses: actions/upload-artifact@v4
         with:
           name: Reel-Upscaler-APK
-          path: app/build/outputs/apk/debug/app-debug.apk
+          path: reel-upscaler-native/app/build/outputs/apk/debug/app-debug.apk
           
